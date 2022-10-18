@@ -1,0 +1,8 @@
+#define ServoPeriod1 20
+#define NEUTRALANGLE 95 /* The wheels are facing forward with this angle */
+#define MAXANGLE 45     
+#define PARKPILOT true
+#define CHANGEDIRECTION 0
+
+void SetServoDriveSignal();
+

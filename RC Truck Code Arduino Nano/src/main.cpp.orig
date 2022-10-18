@@ -1,0 +1,43 @@
+#include <TaskScheduler.h>
+
+#include <Comm_Hand.h>
+#include <DC_Motor.h>
+#include <Flasher.h>
+#include <IO_Hand.h>
+#include <Light_Sensor.h>
+#include <Low_Beam.h>
+#include <Park_Pilot.h>
+#include <Servo_Motor.h>
+
+<<<<<<< HEAD
+// Scheduler
+Scheduler ts;
+
+#define PERIOD1 100
+#define DURATION 10000
+Task lightsensorread ( PERIOD1 * TASK_MILLISECOND, TASK_FOREVER , &lowbeam, &ts, true );
+=======
+Scheduler motorsTask;
+
+#define MOTOR_TASK_PERIOD 20 /* 20 ms */
+
+void startMotorTasks();
+
+Task motors( MOTOR_TASK_PERIOD * TASK_MILLISECOND, TASK_FOREVER, &startMotorTasks, &motorsTask, true );
+>>>>>>> DC_motor
+
+void setup() {
+  // put your setup code here, to run once:
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  
+  ts.execute();
+}
+
+void startMotorTasks()
+{
+  SetDCMotorParameters ();
+  //SetServoDriveSignal();
+}

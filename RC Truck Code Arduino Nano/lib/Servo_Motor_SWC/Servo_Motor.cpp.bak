@@ -1,0 +1,69 @@
+
+#include <Servo_Motor.h>
+
+
+void SetServoDriveSignal()
+{
+    int degree = Rte_Call_ReadSteeringAngle();   /* reading the current angle of the Servo */
+    int incrementation = 1;    /* initializing the incrementation */
+    if ( PARKPILOT == Rte_Call_ReadDrivingMode() )
+    {
+        int SteeringAngle1 = Rte_Call_ReadSteeringAngle();
+        if ( SteeringAngle1 > MAXANGLE )
+        {
+            SteeringAngle1 = MAXANGLE;
+        }
+        else
+        {   if ( SteeringAngle1 < -MAXANGLE )
+            {
+                SteeringAngle1 = -MAXANGLE;
+            }
+            else 
+            {
+                /* do nothing */
+            }
+        }    
+        
+        
+        /* degree = NEUTRALANGLE + SteeringAngle1;
+        int percentage = degree * 100 / 180;
+        Rte_Call_WriteServoDutyCicle( ServoPeriod1 * percentage / 100 );
+        Rte_Call_WriteServoPWMPeriod( ServoPeriod1 ); */ 
+        Rte_Call_WriteSteeringAngle( SteeringAngle1 );
+    }
+    else
+    {
+        int CurrentTurningDirection = Rte_Call_ReadTurningDirection();
+        if ( CHANGEDIRECTION == ( Rte_Call_ReadLastTurningDirection() + CurrentTurningDirection ) ) /* if changes the turning direction */
+        {
+            incrementation = 1;
+            degree += ( CurrentTurningDirection * incrementation );
+        }
+        else
+        {
+            degree += ( CurrentTurningDirection * incrementation );
+            incrementation *= 2;
+        }
+        if ( degree < ( NEUTRALANGLE - MAXANGLE ) ) 
+        {
+             degree = NEUTRALANGLE - MAXANGLE;
+        }  
+        else 
+        {
+            if ( degree > ( NEUTRALANGLE + MAXANGLE ) ) 
+            {
+                degree = NEUTRALANGLE + MAXANGLE;
+            }
+            else
+            {
+                /* do nothing */
+            }     
+        }
+        /* int percentage = degree * 100 / 180;
+        if ( percentage >= 100 )
+            percentage = 100;
+        Rte_Call_WriteServoDutyCicle( ServoPeriod1 * percentage / 100 );
+        Rte_Call_WriteServoPWMPeriod( ServoPeriod1 ); */
+        Rte_Call_WriteSteeringAngle( degree - NEUTRALANGLE );
+    }
+}
